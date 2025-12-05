@@ -1,0 +1,12 @@
+<?php 
+	$this->load->view(strtolower($this->router->fetch_class()).'/include/header');
+?>
+<?php 
+	$this->load->view(strtolower($this->router->fetch_class()).'/include/sidebar');
+?>
+<?php
+	$this->load->view($main_content);
+?>
+<?php
+	$this->load->view(strtolower($this->router->fetch_class()).'/include/footer');
+?>
