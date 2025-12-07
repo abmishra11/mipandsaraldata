@@ -40,7 +40,7 @@ class Csirlabs extends CI_Controller {
 			$updateArray = array(
 				'password' 			=> md5($this->input->post('newpassword')),
 			);
-			$update = $this->login_model->update_database_table('csirlabs', $updateArray, array('username'=>$_SESSION['csirlabs_username']));
+			$update = $this->login_model->update_database_table('csirlabs', $updateArray, array('username'=>$_SESSION['username']));
 			if($update){
 				$data['message'] = "<h3 class='text-center'>Password successfully changed.</h3><br>";
 				$data['category'] = "Success";
@@ -53,7 +53,7 @@ class Csirlabs extends CI_Controller {
 	}
 
     public function check_old_password($str){
-		$old_data = $this->login_model->get_table_data('csirlabs', $where=array('username'=>$_SESSION['csirlabs_username'],'password'=>md5($this->input->post('oldpassword')),'status'=>'1'), $group_by='', '','', '1');
+		$old_data = $this->login_model->get_table_data('csirlabs', $where=array('username'=>$_SESSION['username'],'password'=>md5($this->input->post('oldpassword')),'status'=>'1'), $group_by='', '','', '1');
 
         if(empty($old_data)){
 			$this->form_validation->set_message('check_old_password', 'Old password is not correct.');
@@ -2314,6 +2314,7 @@ class Csirlabs extends CI_Controller {
 			}else{
 				$data['method_prefix'] = 'editcustomform';
 				$data['form'] = $form[0];
+				$data['entry_id'] = $entry_id;
 				$data['formentry'] = $formentry;
 				$data['formdata'] = json_decode($formentry[0]['form_data']);
 				$data['main_content'] = strtolower($this->router->fetch_class()).'/editcustomform';
@@ -2327,7 +2328,8 @@ class Csirlabs extends CI_Controller {
 	public function submiteditcustomform(){
 		
 		$formid = $this->input->post('formid');
-		$forms = $this->login_model->get_table_data('forms', $where=array('id'=>$formid), $group_by='', $order_by_field='id', $order_by_sort='desc', $limit='1');
+		$entry_id = $this->input->post('entry_id');
+		$forms = $this->login_model->get_table_data('customforms', $where=array('id'=>$formid), $group_by='', $order_by_field='id', $order_by_sort='desc', $limit='1');
 		$fields = json_decode($forms[0]['fields']);
 
 		$this->load->library('form_validation');
@@ -2336,15 +2338,15 @@ class Csirlabs extends CI_Controller {
 			$validationrules = 'trim';
 
 			if($value->required == 'Yes'){
-				$validationrules = $validationrules."|required|xss_clean|html_escape";
+				$validationrules = $validationrules."|required";
 			}
 
 			if($value->minlength != '' && $value->minlength != '0'){
-				$validationrules = $validationrules."|min_length[".$value->minlength."]|xss_clean|html_escape";
+				$validationrules = $validationrules."|min_length[".$value->minlength."]";
 			}
 
 			if($value->maxlength != '' && $value->maxlength != '0'){
-				$validationrules = $validationrules."|max_length[".$value->maxlength."]|xss_clean|html_escape";
+				$validationrules = $validationrules."|max_length[".$value->maxlength."]";
 			}
 
 			if($value->fieldtype == 'Checkbox'){
@@ -2373,19 +2375,20 @@ class Csirlabs extends CI_Controller {
 
 			$whereArray = array(
 									'formid'			=> $formid,
-									'lab_id' 			=> $_SESSION['csirlabs_id']
+									'lab_id' 			=> $_SESSION['csirlabs_id'],
+									'id'				=> $entry_id
 								);
 
 			$updateArray = array(
 									'form_data' 		=> json_encode($fieldsdata)
 								);
 
-			$update = $this->login_model->update_database_table('formsdata', $updateArray, $whereArray);
+			$update = $this->login_model->update_database_table('customformsdata', $updateArray, $whereArray);
 
 			if($update){
 				$data['message'] = "Your form has successfully updated";
 				$data['category'] = "Success";
-				$data['formid'] = $formid;
+				$data['formid'] = $entry_id;
 			}else{
 				$data['message'] = "<p>You have not changed anything.</p>";
 				$data['category'] = "error";

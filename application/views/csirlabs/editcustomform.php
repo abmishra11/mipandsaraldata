@@ -17,6 +17,7 @@
 						</div>
 						<div class="form-group" id="form-fields-section">
 							<div class="row">
+								<input type="hidden" name="entry_id" value="<?php echo $entry_id;?>">
 								<input type="hidden" name="formid" value="<?php echo $form['id'];?>">
 								<?php 
 									$fields = json_decode($form['fields']);

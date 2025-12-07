@@ -1255,7 +1255,7 @@ class Admin extends CI_Controller{
 
     public function addbacklogvacancies($labid=''){
         if(isset($labid) && is_numeric($labid)){
-            $categories = $this->login_model->get_table_data('categories', $where=array('status'=>'1'), $group_by='', '','', 1000);
+            $categories = $this->login_model->get_table_data('saraldatacategories', $where=array('status'=>'1'), $group_by='', '','', 1000);
             $lab_data = $this->login_model->get_table_data('csirlabs', $where=array('id'=>$labid,'status'=>'1'), $group_by='', '','', 1);
             $data['start_date'] = date('Y-m-01', strtotime('last month'));
             $data['end_date'] = date('Y-m-t', strtotime('last month'));
@@ -1271,17 +1271,17 @@ class Admin extends CI_Controller{
     }
 
     public function submitbacklogvacancies(){
-        $categories = $this->login_model->get_table_data('categories', $where=array('status'=>'1'), $group_by='', '','', 1000);
+        $categories = $this->login_model->get_table_data('saraldatacategories', $where=array('status'=>'1'), $group_by='', '','', 1000);
 
         $this->load->library('form_validation');
         foreach($categories as $key=>$value){
-            $this->form_validation->set_rules("total-category-".$value['id'], 'Total number of vacancies for '.$value['category_name'], 'trim|required|xss_clean|html_escape|callback_validate_vacancies_total['.$value['id'].','.$value['category_name'].']');
-            $this->form_validation->set_rules("filled-category-".$value['id'], 'Filled up vacancies for '.$value['category_name'], 'trim|required|xss_clean|html_escape');
-            $this->form_validation->set_rules("unfilled-category-".$value['id'], 'Unfilled vacancies for '.$value['category_name'], 'trim|required|xss_clean|html_escape');
+            $this->form_validation->set_rules("total-category-".$value['id'], 'Total number of vacancies for '.$value['category_name'], 'trim|required|callback_validate_vacancies_total['.$value['id'].','.$value['category_name'].']');
+            $this->form_validation->set_rules("filled-category-".$value['id'], 'Filled up vacancies for '.$value['category_name'], 'trim|required');
+            $this->form_validation->set_rules("unfilled-category-".$value['id'], 'Unfilled vacancies for '.$value['category_name'], 'trim|required');
         }
-        $this->form_validation->set_rules('start_date', 'Start Date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('end_date', 'End Date', 'trim|required|xss_clean|html_escape|callback_validate_old_vacancies_entry');
-        $this->form_validation->set_rules('document', 'Document', 'callback_file_check|xss_clean|html_escape');
+        $this->form_validation->set_rules('start_date', 'Start Date', 'trim|required');
+        $this->form_validation->set_rules('end_date', 'End Date', 'trim|required|callback_validate_old_vacancies_entry');
+        $this->form_validation->set_rules('document', 'Document', 'callback_file_check');
 
         if($this->form_validation->run() === false){
             $data['message'] = validation_errors();
@@ -1371,7 +1371,7 @@ class Admin extends CI_Controller{
     }
 
     public function validate_vacancies_total($value, $category_name){
-        $category = $this->login_model->get_table_data('categories', $where=array('status'=>'1','id'=>$category_name[0]), $group_by='', '','', 1);
+        $category = $this->login_model->get_table_data('saraldatacategories', $where=array('status'=>'1','id'=>$category_name[0]), $group_by='', '','', 1);
         $vacancies_total = trim($this->input->post("total-category-".$category_name[0]));
         $vacancies_filled = trim($this->input->post("filled-category-".$category_name[0]));
         $vacancies_unfilled = trim($this->input->post("unfilled-category-".$category_name[0]));
@@ -1438,22 +1438,22 @@ class Admin extends CI_Controller{
 
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('organisation_name', 'Name of the Organisation', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|xss_clean|html_escape|callback_validate_old_probityportal_entry');
-        $this->form_validation->set_rules('sensitive_posts', 'Posts declares as sensitive', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_persons', 'Number of persons occupying sensitive posts beyond 3 years', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('rotation_policy_implemented', 'Whether rotation policy implemented (Yes/No)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('interview_for_group_b', 'Whether interview for group B done away with (Yes/No)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('interview_for_group_c_d', 'Whether interview for group C & D done away with (Yes/No)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_officers_due_group_a', 'Total number of officers due for review/required to be reviewed under FR 56(j) Group A till 30.06.2023', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_officers_due_group_b', 'Total number of officers due for review/required to be reviewed under FR 56(j) Group B till 30.06.2023', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_officers_reviewed_a', 'Total number of officers reviewed under FR 56(j) group A', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_officers_reviewed_b', 'Total number of officers reviewed under FR 56(j) group B', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_officers_invoked_a', 'Number of officers against whom FR 56(j) invoked group A', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('number_of_officers_invoked_b', 'Number of officers against whom FR 56(j) invoked group B', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('document', 'Document', 'callback_file_check|xss_clean|html_escape');
+        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required');
+        $this->form_validation->set_rules('organisation_name', 'Name of the Organisation', 'trim|required');
+        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required');
+        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_probityportal_entry');
+        $this->form_validation->set_rules('sensitive_posts', 'Posts declares as sensitive', 'trim|required');
+        $this->form_validation->set_rules('number_of_persons', 'Number of persons occupying sensitive posts beyond 3 years', 'trim|required');
+        $this->form_validation->set_rules('rotation_policy_implemented', 'Whether rotation policy implemented (Yes/No)', 'trim|required');
+        $this->form_validation->set_rules('interview_for_group_b', 'Whether interview for group B done away with (Yes/No)', 'trim|required');
+        $this->form_validation->set_rules('interview_for_group_c_d', 'Whether interview for group C & D done away with (Yes/No)', 'trim|required');
+        $this->form_validation->set_rules('number_of_officers_due_group_a', 'Total number of officers due for review/required to be reviewed under FR 56(j) Group A till 30.06.2023', 'trim|required');
+        $this->form_validation->set_rules('number_of_officers_due_group_b', 'Total number of officers due for review/required to be reviewed under FR 56(j) Group B till 30.06.2023', 'trim|required');
+        $this->form_validation->set_rules('number_of_officers_reviewed_a', 'Total number of officers reviewed under FR 56(j) group A', 'trim|required');
+        $this->form_validation->set_rules('number_of_officers_reviewed_b', 'Total number of officers reviewed under FR 56(j) group B', 'trim|required');
+        $this->form_validation->set_rules('number_of_officers_invoked_a', 'Number of officers against whom FR 56(j) invoked group A', 'trim|required');
+        $this->form_validation->set_rules('number_of_officers_invoked_b', 'Number of officers against whom FR 56(j) invoked group B', 'trim|required');
+        $this->form_validation->set_rules('document', 'Document', 'callback_file_check');
 
         if($this->form_validation->run() === false){
             $data['message'] = validation_errors();
@@ -1582,30 +1582,29 @@ class Admin extends CI_Controller{
 
         $this->load->library('form_validation');
 
-        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|xss_clean|html_escape|callback_validate_old_proforma_entry');
+        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required');
+        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required');
+        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_proforma_entry');
 
-        $this->form_validation->set_rules('total_employees_group_a', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-A', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_employed_group_a', 'Total number of persons employed during the year for Group-A', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_minority_employed_group_a', 'Minority persons employed during the year for Group-A', 'trim|required|xss_clean|html_escape');
+        $this->form_validation->set_rules('total_employees_group_a', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-A', 'trim|required');
+        $this->form_validation->set_rules('total_employed_group_a', 'Total number of persons employed during the year for Group-A', 'trim|required');
+        $this->form_validation->set_rules('total_minority_employed_group_a', 'Minority persons employed during the year for Group-A', 'trim|required');
 
-        $this->form_validation->set_rules('total_employees_group_b', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-B', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_employed_group_b', 'Total number of persons employed during the year for Group-B', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_minority_employed_group_b', 'Minority persons employed during the year for Group-B', 'trim|required|xss_clean|html_escape');
+        $this->form_validation->set_rules('total_employees_group_b', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-B', 'trim|required');
+        $this->form_validation->set_rules('total_employed_group_b', 'Total number of persons employed during the year for Group-B', 'trim|required');
+        $this->form_validation->set_rules('total_minority_employed_group_b', 'Minority persons employed during the year for Group-B', 'trim|required');
 
-        $this->form_validation->set_rules('total_employees_group_c', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-C', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_employed_group_c', 'Total number of persons employed during the year for Group-C', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_minority_employed_group_c', 'Minority persons employed during the year for Group-C', 'trim|required|xss_clean|html_escape');
+        $this->form_validation->set_rules('total_employees_group_c', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-C', 'trim|required');
+        $this->form_validation->set_rules('total_employed_group_c', 'Total number of persons employed during the year for Group-C', 'trim|required');
+        $this->form_validation->set_rules('total_minority_employed_group_c', 'Minority persons employed during the year for Group-C', 'trim|required');
+        $this->form_validation->set_rules('total_employees_group_d', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-D', 'trim|required');
+        $this->form_validation->set_rules('total_employed_group_d', 'Total number of persons employed during the year for Group-D', 'trim|required');
+        $this->form_validation->set_rules('total_minority_employed_group_d', 'Minority persons employed during the year for Group-D', 'trim|required');
 
-        $this->form_validation->set_rules('total_employees_group_d', 'Total Number of employees as on '.$this->input->post('end_date').' for Group-D', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_employed_group_d', 'Total number of persons employed during the year for Group-D', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_minority_employed_group_d', 'Minority persons employed during the year for Group-D', 'trim|required|xss_clean|html_escape');
-
-        $this->form_validation->set_rules('total_employees', 'Total Number of employees as on '.$this->input->post('end_date'), 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_employed', 'Total number of persons employed during the year', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_minority_employed', 'Total minority persons employed during the year', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('document', 'Document', 'callback_file_check|xss_clean|html_escape');
+        $this->form_validation->set_rules('total_employees', 'Total Number of employees as on '.$this->input->post('end_date'), 'trim|required');
+        $this->form_validation->set_rules('total_employed', 'Total number of persons employed during the year', 'trim|required');
+        $this->form_validation->set_rules('total_minority_employed', 'Total minority persons employed during the year', 'trim|required');
+        $this->form_validation->set_rules('document', 'Document', 'callback_file_check');
 
         if($this->form_validation->run() === false){
             $data['message'] = validation_errors();
@@ -1734,16 +1733,16 @@ class Admin extends CI_Controller{
 
     public function submitqualifyingservice(){
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_qualifyingservice_entry|xss_clean|html_escape');
-        $this->form_validation->set_rules('sanctioned_manpower', 'Sanctioned strength of manpower', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('manpower_in_position', 'Manpower in position', 'trim|required|callback_validate_manpower_in_position|xss_clean|html_escape');
-        $this->form_validation->set_rules('verified_employees', 'Number of employees whose service has been verified as per rules up to '.$this->input->post('end_date'), 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('not_verified_employees', 'Number of employees whose service has not been verified up to '.$this->input->post('end_date'), 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('non_verification_reason', 'Reason for non-verification of service', 'trim|callback_validate_non_verified_reason|xss_clean|html_escape');
-        $this->form_validation->set_rules('certification', 'Certified term', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('document', 'Document', 'callback_file_check|xss_clean|html_escape');
+        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required');
+        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required');
+        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_qualifyingservice_entry');
+        $this->form_validation->set_rules('sanctioned_manpower', 'Sanctioned strength of manpower', 'trim|required');
+        $this->form_validation->set_rules('manpower_in_position', 'Manpower in position', 'trim|required|callback_validate_manpower_in_position');
+        $this->form_validation->set_rules('verified_employees', 'Number of employees whose service has been verified as per rules up to '.$this->input->post('end_date'), 'trim|required');
+        $this->form_validation->set_rules('not_verified_employees', 'Number of employees whose service has not been verified up to '.$this->input->post('end_date'), 'trim|required');
+        $this->form_validation->set_rules('non_verification_reason', 'Reason for non-verification of service', 'trim|callback_validate_non_verified_reason');
+        $this->form_validation->set_rules('certification', 'Certified term', 'trim|required');
+        $this->form_validation->set_rules('document', 'Document', 'callback_file_check');
 
         if($this->form_validation->run() === false){
             $data['message'] = validation_errors();
@@ -1895,23 +1894,23 @@ class Admin extends CI_Controller{
     public function submithalfyearlyreport(){
         
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_halfyearlyreport_entry|xss_clean|html_escape');
+        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required');
+        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required');
+        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_halfyearlyreport_entry');
 
-        $this->form_validation->set_rules('strength_of_personnel_total[]', 'Strength of personnel in the Estt. as on '.date('d-m-Y', strtotime($this->input->post('start_date'))).' (Total)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('strength_of_personnel_esm[]', 'Strength of personnel in the Estt. as on '.date('d-m-Y', strtotime($this->input->post('start_date'))).' (ESM)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_number_of_direct_recruitment_vacancies_occurred_during_the[]', 'Total number of direct recruitment vacancies occurred during the period', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('total_direct_recruitment[]', 'Total number of direct recruitment vacancies authorised for ESM (Out of column 4) in terms of DoPT notification dated 04-10-2012', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('direct_recruitment_vacancies_reserved_for_esm[]', 'Direct recruitment vacancies reserved for ESM (Out of Column 4)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('no_of_direct_recruitment_vacancies_filled_total[]', 'Number of direct recruitment vacancies filled during the period out of column 4 and 5 (Total)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('no_of_direct_recruitment_vacancies_filled_esm[]', 'Number of direct recruitment vacancies filled during the period out of column 4 and 5 (ESM)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('shortfall_in_filling_the_vacancies[]', 'Shortfall in filling the vacancies of ESM out of 5 and 8 for', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('overall_strength_total[]', 'Overall strength and percentage as on '.date('d-m-Y', strtotime($this->input->post('end_date'))).' (Total)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('overall_strength_esm[]', 'Overall strength and percentage as on '.date('d-m-Y', strtotime($this->input->post('end_date'))).' (ESM)', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('percentage_of_esm[]', 'Percentage of ESM', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('reason_for_shortfall[]', 'Reason for shortfall in the filling the vacancies of ESM', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('document', 'Document', 'callback_file_check|xss_clean|html_escape');
+        $this->form_validation->set_rules('strength_of_personnel_total[]', 'Strength of personnel in the Estt. as on '.date('d-m-Y', strtotime($this->input->post('start_date'))).' (Total)', 'trim|required');
+        $this->form_validation->set_rules('strength_of_personnel_esm[]', 'Strength of personnel in the Estt. as on '.date('d-m-Y', strtotime($this->input->post('start_date'))).' (ESM)', 'trim|required');
+        $this->form_validation->set_rules('total_number_of_direct_recruitment_vacancies_occurred_during_the[]', 'Total number of direct recruitment vacancies occurred during the period', 'trim|required');
+        $this->form_validation->set_rules('total_direct_recruitment[]', 'Total number of direct recruitment vacancies authorised for ESM (Out of column 4) in terms of DoPT notification dated 04-10-2012', 'trim|required');
+        $this->form_validation->set_rules('direct_recruitment_vacancies_reserved_for_esm[]', 'Direct recruitment vacancies reserved for ESM (Out of Column 4)', 'trim|required');
+        $this->form_validation->set_rules('no_of_direct_recruitment_vacancies_filled_total[]', 'Number of direct recruitment vacancies filled during the period out of column 4 and 5 (Total)', 'trim|required');
+        $this->form_validation->set_rules('no_of_direct_recruitment_vacancies_filled_esm[]', 'Number of direct recruitment vacancies filled during the period out of column 4 and 5 (ESM)', 'trim|required');
+        $this->form_validation->set_rules('shortfall_in_filling_the_vacancies[]', 'Shortfall in filling the vacancies of ESM out of 5 and 8 for', 'trim|required');
+        $this->form_validation->set_rules('overall_strength_total[]', 'Overall strength and percentage as on '.date('d-m-Y', strtotime($this->input->post('end_date'))).' (Total)', 'trim|required');
+        $this->form_validation->set_rules('overall_strength_esm[]', 'Overall strength and percentage as on '.date('d-m-Y', strtotime($this->input->post('end_date'))).' (ESM)', 'trim|required');
+        $this->form_validation->set_rules('percentage_of_esm[]', 'Percentage of ESM', 'trim|required');
+        $this->form_validation->set_rules('reason_for_shortfall[]', 'Reason for shortfall in the filling the vacancies of ESM', 'trim|required');
+        $this->form_validation->set_rules('document', 'Document', 'callback_file_check');
 
         if($this->form_validation->run() === false){
             $data['message'] = validation_errors();
@@ -2047,23 +2046,22 @@ class Admin extends CI_Controller{
     public function submitmmrform(){
 
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_mmr_entry|xss_clean|html_escape');
+        $this->form_validation->set_rules('csirlabs_id', 'CSIR Lab ID', 'trim|required');
+        $this->form_validation->set_rules('start_date', 'Start date', 'trim|required');
+        $this->form_validation->set_rules('end_date', 'End date', 'trim|required|callback_validate_old_mmr_entry');
 
-        $this->form_validation->set_rules('taskcode[]', 'Task Code', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('name[]', 'Name', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('gender[]', 'Gender', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('email[]', 'Email ID', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('mobile_number[]', 'Mobile Number', 'trim|required|max_length[10]|min_length[10]|numeric|xss_clean|html_escape');
-        $this->form_validation->set_rules('designation[]', 'Designation', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('paylevel[]', 'Pay Level', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('groupcode[]', 'Group Code', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('categorycode[]', 'Category Code', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('appointorderno[]', 'Appoint Order No', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('appointdate[]', 'Appoint Date', 'trim|required|xss_clean|html_escape');
-        $this->form_validation->set_rules('document', 'Document', 'callback_file_check|xss_clean|html_escape');
-
+        $this->form_validation->set_rules('taskcode[]', 'Task Code', 'trim|required');
+        $this->form_validation->set_rules('name[]', 'Name', 'trim|required');
+        $this->form_validation->set_rules('gender[]', 'Gender', 'trim|required');
+        $this->form_validation->set_rules('email[]', 'Email ID', 'trim|required');
+        $this->form_validation->set_rules('mobile_number[]', 'Mobile Number', 'trim|required|max_length[10]|min_length[10]|numeric');
+        $this->form_validation->set_rules('designation[]', 'Designation', 'trim|required');
+        $this->form_validation->set_rules('paylevel[]', 'Pay Level', 'trim|required');
+        $this->form_validation->set_rules('groupcode[]', 'Group Code', 'trim|required');
+        $this->form_validation->set_rules('categorycode[]', 'Category Code', 'trim|required');
+        $this->form_validation->set_rules('appointorderno[]', 'Appoint Order No', 'trim|required');
+        $this->form_validation->set_rules('appointdate[]', 'Appoint Date', 'trim|required');
+        $this->form_validation->set_rules('document', 'Document', 'callback_file_check');
         if($this->form_validation->run() === false){
             $data['message'] = validation_errors();
             $data['category'] = "validation error";

@@ -2,6 +2,7 @@
 	<div class="admin-dashboard">
 		<div class="admin-dashboard-content" style="min-height: 90vh; background-color: #337ab7;color: #fff;">
 			<form method="post" id="<?php echo $method_prefix;?>-add-data-form" style="padding: 1% 5%;background-color: #337ab7; color: #fff;"> 
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash();?>">
 				<div class="form-group">
 					<div class="row">
 						<div class="col-md-12 text-center">

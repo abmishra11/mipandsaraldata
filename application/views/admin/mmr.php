@@ -43,7 +43,7 @@
 									</div>
 								</div>
 								<div id="collapse_backlog_vacancies_<?php echo $dates[0];?>" class="collapse" aria-labelledby="heading_backlog_vacancies_<?php echo $dates[0];?>" data-parent="#dashboard_backlog_vacancies_<?php echo $dates[0];?>">
-									<div class="card-body">
+									<div class="card-body table-responsive">
 										<table class="table table-bordered" id="admin-<?php echo $method_prefix;?>-table-<?php echo $dates[1];?>">
 											<thead>
 												<tr>

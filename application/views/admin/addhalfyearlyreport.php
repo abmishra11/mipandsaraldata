@@ -2,6 +2,7 @@
 	<div class="admin-dashboard">
 		<div class="admin-dashboard-content" style="min-height: 90vh;background-color: #337ab7; color: #fff;">
 			<form method="post" id="<?php echo $method_prefix;?>-add-data-form" style="padding: 1%;min-height: 97%;"> 
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash();?>">
 				<div class="form-group row">
 					<div class="col-md-12">
 						<div id="<?php echo $method_prefix;?>-add-data-error" class="margin-bottom-10 text-center"></div>
@@ -27,8 +28,8 @@
 						<label class="margin-bottom-10">End Date</label>
 						<input type="text" class="form-control" name="end_date" id="end_date" value="<?php echo date('d-m-Y', strtotime($end_date));?>" readonly>
 					</div>
-					<div class="col-md-12 margin-bottom-10">
-						<table class="table table-bordered table-responsive">
+					<div class="col-md-12 margin-bottom-10 table-responsive">
+						<table class="table table-bordered">
 							<thead>
 								<tr>
 									<th></th>
@@ -59,7 +60,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
+								<tr style="background-color: #337ab7; color: #fff;">
 									<td>A</td>
 									<td>
 										<input type="number" class="form-control" name="strength_of_personnel_total[]" value="0" style="width: 70px;">
@@ -98,7 +99,7 @@
 										<textarea class="form-control" name="reason_for_shortfall[]" cols="500"></textarea>
 									</td>
 								</tr>
-								<tr>
+								<tr style="background-color: #337ab7; color: #fff;">
 									<td>B</td>
 									<td>
 										<input type="number" class="form-control" name="strength_of_personnel_total[]" value="0" style="width: 70px;">
@@ -137,7 +138,7 @@
 										<textarea class="form-control"name="reason_for_shortfall[]" cols="500"></textarea>
 									</td>
 								</tr>
-								<tr>
+								<tr style="background-color: #337ab7; color: #fff;">
 									<td>C (Including erstwhile Group D)</td>
 									<td>
 										<input type="number" class="form-control" name="strength_of_personnel_total[]" value="0" style="width: 70px;">

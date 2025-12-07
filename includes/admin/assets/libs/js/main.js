@@ -801,6 +801,7 @@ function getlabdata(page) {
 }
 
 /* Add Freezing date */
+/*
 $("#freezind-date-form").submit(function (event) {
 	activate(1);
 	event.preventDefault();
@@ -825,6 +826,7 @@ $("#freezind-date-form").submit(function (event) {
 		},
 	});
 });
+*/
 /* Add Freezing date */
 
 /* Custom Form Section */
@@ -1094,6 +1096,242 @@ $("#freezind-date-form").off('submit').on('submit', function(event){
     });
 });
 /* Add Freezing date */
+
+/* Add Backlog Vacancies */
+$("#addbacklogvacancies-add-data-form").submit(function(e){
+    activate(1);
+    event.preventDefault();
+    var formData = new FormData($('#addbacklogvacancies-add-data-form')[0]);
+
+    $.ajax({
+        url: site_url+"admin/submitbacklogvacancies", 
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result){ 
+            var res = JSON.parse(result);
+            $("#addbacklogvacancies-add-data-error").html('');
+            if(res.category == "Success"){
+                alert(res.message);
+                var url = site_url+"admin/backlogvacancies";
+                window.location.replace(url);
+                activate(0);    
+            }else{
+				$("#validation-error-message").html(res.message).css("color", "red");
+				$("#validation-error-model").modal('show');
+				activate(0);
+            }
+        }
+    });
+});
+/* Add Backlog Vacancies */
+
+/* Add Probity Portal Data */
+$("#addprobitydata-add-data-form").submit(function(e){
+    activate(1);
+    event.preventDefault();
+    var formData = new FormData($('#addprobitydata-add-data-form')[0]);
+
+    $.ajax({
+        url: site_url+"admin/submitprobitydata", 
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result){ 
+            var res = JSON.parse(result);
+            $("#addprobitydata-add-data-error").html('');
+            if(res.category == "Success"){
+                alert(res.message);
+                var url = site_url+"admin/probityportal";
+                window.location.replace(url);
+                activate(0);    
+            }else{
+				$("#validation-error-message").html(res.message).css("color", "red");
+				$("#validation-error-model").modal('show');
+				activate(0);
+            }
+        }
+    });
+});
+/* Add Probity Portal Data */
+
+/* Add 15 Point Programme data */
+
+function calculate_total_employees(){
+	var groupa = $("#total_employees_group_a").val();
+	var groupb = $("#total_employees_group_b").val();
+	var groupc = $("#total_employees_group_c").val();
+	var groupd = $("#total_employees_group_d").val();
+	var total = parseInt(groupa) + parseInt(groupb) + parseInt(groupc) + parseInt(groupd);
+	$("#total_employees").val(total);
+}
+
+function calculate_total_employed(){
+	var groupa = $("#total_employed_group_a").val();
+	var groupb = $("#total_employed_group_b").val();
+	var groupc = $("#total_employed_group_c").val();
+	var groupd = $("#total_employed_group_d").val();
+	var total = parseInt(groupa) + parseInt(groupb) + parseInt(groupc) + parseInt(groupd);
+	$("#total_employed").val(total);
+}
+
+function calculate_total_minority_employed(){
+	var groupa = $("#total_minority_employed_group_a").val();
+	var groupb = $("#total_minority_employed_group_b").val();
+	var groupc = $("#total_minority_employed_group_c").val();
+	var groupd = $("#total_minority_employed_group_d").val();
+	var total = parseInt(groupa) + parseInt(groupb) + parseInt(groupc) + parseInt(groupd);
+	$("#total_minority_employed").val(total);
+}
+
+$("#addproforma-add-data-form").submit(function(e){
+    activate(1);
+    event.preventDefault();
+    var formData = new FormData($('#addproforma-add-data-form')[0]);
+
+    $.ajax({
+        url: site_url+"admin/submitproforma", 
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result){ 
+            var res = JSON.parse(result);
+            $("#addproforma-add-data-error").html('');
+            if(res.category == "Success"){
+                alert(res.message);
+                var url = site_url+"admin/proforma";
+                window.location.replace(url);
+                activate(0);    
+            }else{
+				$("#validation-error-message").html(res.message).css("color", "red");
+				$("#validation-error-model").modal('show');
+				activate(0);
+            }
+        }
+    });
+});
+/* Add 15 Point Programme data */
+
+/* qualifying service */
+$("#addqualifyingservice-add-data-form").submit(function(e){
+    activate(1);
+    event.preventDefault();
+    var formData = new FormData($('#addqualifyingservice-add-data-form')[0]);
+
+    $.ajax({
+        url: site_url+"admin/submitqualifyingservice", 
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result){ 
+            var res = JSON.parse(result);
+            $("#addqualifyingservice-add-data-error").html('');
+            if(res.category == "Success"){
+                alert(res.message);
+                var url = site_url+"admin/qualifyingservice";
+                window.location.replace(url);
+                activate(0);    
+            }else{
+				$("#validation-error-message").html(res.message).css("color", "red");
+				$("#validation-error-model").modal('show');
+				activate(0);
+            }
+        }
+    });
+});
+
+function check_non_verified(ref){
+	var number_of_verified = $(ref).val();
+	if(number_of_verified == ''){
+		$(ref).val(0);
+	}
+	if(number_of_verified>0){
+		$('#non-verification-reason-div').show();
+	}else{
+		$('#non-verification-reason-div').hide();
+		$('#non_verification_reason').val('');
+	}
+}
+/* qualifying service */
+
+/* HALF-YEARLY REPORT */
+$("#addhalfyearlyreport-add-data-form").submit(function(e){
+    activate(1);
+    event.preventDefault();
+    var formData = new FormData($('#addhalfyearlyreport-add-data-form')[0]);
+
+    $.ajax({
+        url: site_url+"admin/submithalfyearlyreport", 
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result){ 
+            var res = JSON.parse(result);
+            $("#addhalfyearlyreport-add-data-error").html('');
+            if(res.category == "Success"){
+                alert(res.message);
+                var url = site_url+"admin/halfyearlyreport";
+                window.location.replace(url);
+                activate(0);    
+            }else{
+				$("#validation-error-message").html(res.message).css("color", "red");
+				$("#validation-error-model").modal('show');
+				activate(0);
+            }
+        }
+    });
+});
+/* HALF-YEARLY REPORT */
+
+/* Mission Mode Recruitment */
+$("#addmmr-add-data-form").submit(function(e){
+    activate(1);
+    event.preventDefault();
+    var formData = new FormData($('#addmmr-add-data-form')[0]);
+
+    $.ajax({
+        url: site_url+"admin/submitmmrform", 
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(result){ 
+            var res = JSON.parse(result);
+            $("#addmmr-add-data-error").html('');
+            if(res.category == "Success"){
+                alert(res.message);
+                var url = site_url+"admin/mmr";
+                window.location.replace(url);
+                activate(0);    
+            }else{
+				$("#validation-error-message").html(res.message).css("color", "red");
+				$("#validation-error-model").modal('show');
+				activate(0);
+            }
+        }
+    });
+});
+
+$(document).ready(function() {
+    $('#mmr-add-new-detail').click(function(e) {
+    	e.preventDefault();
+	    var clonedItem = $('#mmr-entry-fields').clone();
+	    $('#mmr-entry-section').append(clonedItem);
+	    clonedItem.append('<div class="col-md-12 text-right"><button class="btn btn-sm btn-danger removemmrentry">Remove Employee Details</button></div><div class="col-md-12"><hr style="border-top: 1px solid #fff;"></div>');
+    });
+
+    $('#mmr-entry-section').on('click', 'button.removemmrentry', function(e) {
+    	e.preventDefault();
+        $(this).closest('.row').remove();
+    });
+
+});
+/* Mission Mode Recruitment */
 
 $(document).ready(function() {
     $('.table').each(function(index) {
