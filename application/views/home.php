@@ -58,6 +58,14 @@
 						<p>CSIR Lab Login</p>
 					</a>
 				</div>
+				<div class="col home-button-container">
+					<a href="<?php echo base_url();?>home/drc">
+						<div class="logo-container">
+							<img src="<?php echo base_url();?>includes/images/lab_login_icon.png">
+						</div>
+						<p>DRC Login</p>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>

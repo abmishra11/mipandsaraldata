@@ -226,30 +226,54 @@ function addfeedback(ref){
 
 $(document).ready(function () {
 
-    /**************Admin and CSIR Lab Sidebar Section Start***************************/
+	/**************Admin Sidebar **************/
+	$(".submenu-toggle").on("click", function (e) {
+		e.preventDefault();
 
-    $(".submenu-toggle").on("click", function () {
-        let parent = $(this).closest(".nav-item");
+		if (!$(".admin-sidebar").hasClass("fliph")) {
+			let parent = $(this).closest(".nav-item");
+			parent.toggleClass("open");
+			parent.children(".sub-menu").slideToggle(200);
+		}
+	});
 
-        parent.toggleClass("open");
-        parent.find(".sub-menu").slideToggle(200);
-    });
+	let currentUrl = window.location.href.split(/[?#]/)[0];
 
-    let currentUrl = window.location.href;
+	$(".admin-sidebar a").each(function () {
+		let linkUrl = this.href.split(/[?#]/)[0];
 
-    $(".admin-sidebar a").each(function () {
-        if (this.href === currentUrl) {
+		if (currentUrl === linkUrl) {
+			$(this).addClass("active");
 
-            $(this).addClass("active");
+			let parentItem = $(this).closest(".nav-item.has-submenu");
+			if (parentItem.length) {
+				parentItem.addClass("open");
+				parentItem.children(".sub-menu").show();
+			}
+		}
+	});
 
-            let parentItem = $(this).closest(".nav-item.has-submenu");
+	$(".nav-item.has-submenu").hover(
+		function () {
+			if ($(".admin-sidebar").hasClass("fliph")) {
+				$(this).children(".sub-menu")
+					.stop(true, true)
+					.fadeIn(150);
+			}
+		},
+		function () {
+			if ($(".admin-sidebar").hasClass("fliph")) {
+				$(this).children(".sub-menu")
+					.stop(true, true)
+					.fadeOut(150);
+			}
+		}
+	);
 
-            parentItem.addClass("open");
-            parentItem.find(".sub-menu").show(); // keep it open
-        }
-    });
-
-    /**************Admin and CSIR Lab Sidebar Section End***************************/
+	$("#toggleSidebar").on("click", function () {
+		$(".admin-sidebar").toggleClass("fliph");
+	});
+	/**************Admin Sidebar **************/
 
     /**************Datepicker Section Start ***************************/
 

@@ -27,10 +27,21 @@
 							foreach($groups[$evalue['id']] as $key=>$value){
 						?>
 							<div class="row">
-								<div class="col-md-10">
+								<div class="col-md-8">
 									<h4><?php echo $value['title'];?></h4>
 								</div>
-								<div class="col-md-2 text-right">
+								<div class="col-md-4 text-right">
+									<?php
+										if($value['status']==0){
+									?>
+										<a href="javascript:void(0)" class="btn btn-sm btn-success formdisablebutton"  id="formdisablebutton_<?php echo $value['id'];?>_status_<?php echo $value['status'];?>">Enable Form</a>
+									<?php
+										}else{
+									?>
+									<a href="javascript:void(0)" class="btn btn-sm btn-danger formdisablebutton" id="formdisablebutton_<?php echo $value['id'];?>_status_<?php echo $value['status'];?>">Disable Form</a>
+									<?php
+										}
+									?>
 									<a href="<?php echo base_url();?>admin/viewform/<?php echo $value['id'];?>" class="btn btn-sm btn-info">View Form</a>
 								</div>
 							</div>

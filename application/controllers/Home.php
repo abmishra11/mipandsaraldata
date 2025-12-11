@@ -91,4 +91,43 @@ class Home extends CI_Controller {
 		}
 		echo json_encode($data);
 	}
+
+	public function drc(){
+		$data['page_title'] = 'DRC Login';	
+		$data['login_form_title'] = 'DRC Login Panel';
+		$data['admin_prefix'] = 'drc';
+		$data['main_content'] = 'drc';
+		$this->load->view('include/template', $data);
+	}
+
+	public function validatedrc(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('username', 'User Name', 'trim|required');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required');
+		if($this->form_validation->run() === false){
+			$data['category'] = 'validation_error';
+			$data['message'] = validation_errors();
+		}else{
+			$query = $this->login_model->validateuser("users","username","password","username","password");
+			if($query){
+				$value = $query->result_array();
+				$sessiondata = array(
+					'username' => $this->input->post('username'),
+					'is_drc_log_in' => true,
+					'user_type' => $value[0]['user_type'],
+				);
+				$this->session->set_userdata($sessiondata);
+				$data['category'] = 'success';
+				$data['message'] = "<p>Valid credentials.</p>";
+			}else{
+				$sessiondata = array(
+					'is_drc_log_in' => false,
+				);
+				$this->session->set_userdata($sessiondata);
+				$data['message'] = '<p>Invalid user name or password. Please provide valid credentials</p>';
+				$data['category'] = 'error';	
+			}
+		}
+		echo json_encode($data);
+	}
 }

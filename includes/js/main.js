@@ -39,3 +39,8 @@ $("#csirlabsloginform").submit(function(e){
     e.preventDefault(); 
     ajax_call("#csirlabsloginform","home/validatecsirlabs","#csirlabs-login-error","#csirlabs-login-success","csirlabs/dashboard","POST","json");
 });
+
+$("#drcloginform").submit(function(e){
+    e.preventDefault(); 
+    ajax_call("#drcloginform","home/validatedrc","#drc-login-error","#drc-login-success","drc/dashboard","POST","json");
+});

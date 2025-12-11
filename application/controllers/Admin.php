@@ -659,7 +659,7 @@ class Admin extends CI_Controller{
         $data['method_prefix'] = 'forms';
         $employeetype = $this->login_model->get_table_data('employeetype', $where = array(), $group_by = '', $order_by_field = '', $order_by_sort = '', $limit = '');
         foreach ($employeetype as $key => $value) {
-            $data["groups"][$value['id']] = $this->login_model->get_table_data('forms', $where = array('employeetype' => $value['id'], 'status' => '1'), $group_by = '', $order_by_field = '', $order_by_sort = '', $limit = '');
+            $data["groups"][$value['id']] = $this->login_model->get_table_data('forms', $where = array('employeetype' => $value['id']), $group_by = '', $order_by_field = '', $order_by_sort = '', $limit = '');
         }
         $data['employeetype'] = $employeetype;
         $data['main_content'] = strtolower($this->router->fetch_class()) . '/forms';

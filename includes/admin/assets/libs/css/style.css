@@ -98,6 +98,7 @@ table {
     padding: 10px;
     color: #fff;
     transition: .3s;
+    position: relative;
 }
 
 .admin-sidebar ul {
@@ -118,13 +119,14 @@ table {
     color: #fff;
     text-decoration: none;
     border-radius: 4px;
+    position: relative;
 }
 
 .admin-sidebar a.nav-link:hover {
     background: rgba(0,0,0,0.2);
 }
 
-.admin-sidebar .nav-item.has-submenu .submenu-toggle .arrow {
+.admin-sidebar .arrow {
     margin-left: auto;
     border: solid #fff;
     border-width: 0 2px 2px 0;
@@ -133,8 +135,7 @@ table {
     transition: .3s;
 }
 
-/* Rotating arrow on open */
-.nav-item.open .submenu-toggle .arrow {
+.nav-item.open .arrow {
     transform: rotate(-135deg);
 }
 
@@ -156,7 +157,7 @@ table {
     background: rgba(0,0,0,0.3);
 }
 
-/* Collapse Sidebar (Mini Mode) */
+/* Collapsed Sidebar */
 .admin-sidebar.fliph {
     width: 60px;
 }
@@ -166,14 +167,39 @@ table {
 }
 
 .admin-sidebar.fliph .sub-menu {
+    display: none !important;
     position: absolute;
     left: 60px;
-    width: 180px;
-    z-index: 999;
+    top: 0;
+    width: 200px;
+    background: #2d6da3;
+    border-left: 4px solid #dedede;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
 }
 
+/* Active Link */
 .admin-sidebar a.active {
     background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Toggle Button */
+.sidebar-toggle-btn {
+    position: fixed;
+    left: 270px;
+    top: 15px;
+    padding: 8px 12px;
+    background: #337ab7;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    z-index: 2000;
+    transition: .3s;
+}
+
+.admin-sidebar.fliph + .sidebar-toggle-btn {
+    left: 70px;
 }
 
 /* Admin Sidebar */

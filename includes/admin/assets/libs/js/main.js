@@ -1041,30 +1041,54 @@ function removeoption(ref) {
 
 $(document).ready(function () {
 
-    // --- Toggle Submenu Click ---
-    $(".submenu-toggle").on("click", function () {
-        let parent = $(this).closest(".nav-item");
+	/**************Admin Sidebar **************/
+	$(".submenu-toggle").on("click", function (e) {
+		e.preventDefault();
 
-        parent.toggleClass("open");
-        parent.find(".sub-menu").slideToggle(200);
-    });
+		if (!$(".admin-sidebar").hasClass("fliph")) {
+			let parent = $(this).closest(".nav-item");
+			parent.toggleClass("open");
+			parent.children(".sub-menu").slideToggle(200);
+		}
+	});
 
-    // --- Keep Submenu Open After Page Reload ---
-    let currentUrl = window.location.href;
+	let currentUrl = window.location.href.split(/[?#]/)[0];
 
-    $(".admin-sidebar a").each(function () {
-        if (this.href === currentUrl) {
+	$(".admin-sidebar a").each(function () {
+		let linkUrl = this.href.split(/[?#]/)[0];
 
-            // Highlight active link
-            $(this).addClass("active");
+		if (currentUrl === linkUrl) {
+			$(this).addClass("active");
 
-            // Open the parent submenu
-            let parentItem = $(this).closest(".nav-item.has-submenu");
+			let parentItem = $(this).closest(".nav-item.has-submenu");
+			if (parentItem.length) {
+				parentItem.addClass("open");
+				parentItem.children(".sub-menu").show();
+			}
+		}
+	});
 
-            parentItem.addClass("open");
-            parentItem.find(".sub-menu").show(); // keep it open
-        }
-    });
+	$(".nav-item.has-submenu").hover(
+		function () {
+			if ($(".admin-sidebar").hasClass("fliph")) {
+				$(this).children(".sub-menu")
+					.stop(true, true)
+					.fadeIn(150);
+			}
+		},
+		function () {
+			if ($(".admin-sidebar").hasClass("fliph")) {
+				$(this).children(".sub-menu")
+					.stop(true, true)
+					.fadeOut(150);
+			}
+		}
+	);
+
+	$("#toggleSidebar").on("click", function () {
+		$(".admin-sidebar").toggleClass("fliph");
+	});
+	/**************Admin Sidebar **************/
 
 });
 
@@ -1332,6 +1356,43 @@ $(document).ready(function() {
 
 });
 /* Mission Mode Recruitment */
+
+/* MIP Forms */
+
+$(".formdisablebutton").click(function (e) {
+	activate(1);
+	var buttonid = this.id;
+	var id = this.id.replace("formdisablebutton_", "");
+	var ids = id.split("_status_");
+	var status = 0;
+	var origin_id = ids[0].trim();
+	if (ids[1].trim() == "0") {
+		status = 1;
+	}
+	var table = "forms";
+	$.ajax({
+		url: site_url + "admin/updatetable",
+		method: "POST",
+		data: {
+			id: origin_id,
+			table: table,
+			status: status,
+			manpowerzibrish: manpowerzibrish,
+		},
+		dataType: "json",
+		success: function (data) {
+			if (data.category == "success") {
+				var url = site_url + "admin/forms";
+				window.location.replace(url);
+			} else {
+				alert(data.message);
+			}
+			activate(0);
+		},
+	});
+});
+
+/* MIP Forms */
 
 $(document).ready(function() {
     $('.table').each(function(index) {
